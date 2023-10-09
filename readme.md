@@ -33,7 +33,7 @@ A big upgrade from [Dial2Verify-Twilio V1](https://github.com/natsu90/dial2verif
 
 3. Fill up `.env`
 
-4. `node app.js`
+4. `npm run start`
 
 ### Warning
 
