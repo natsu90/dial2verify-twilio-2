@@ -206,9 +206,9 @@ const getVerificationByDialNumber = async(dialNumber) => {
         and expired_at >= ?`, [dialNumber, currentTime]))
 }
 
-const updateVerification = async(id, callerNumber) => {
+const updateVerification = (id, callerNumber) => {
     const currentTime = moment().format('YYYY-MM-DD HH:mm:ss')
-    return (await db.run(`update verifications set caller_phone_number = ?, expired_at = ? where id = ?`, [callerNumber, currentTime, id]))
+    db.run(`update verifications set caller_phone_number = ?, expired_at = ? where id = ?`, [callerNumber, currentTime, id])
 }
 
 const importTwilioNumbers = async() => {
@@ -387,14 +387,14 @@ app.post('/twilio', twilio.webhook(subAccountAuthToken), async(req, res) => {
     const callSid = req.body.CallSid
     const verification = await getVerificationByDialNumber(dialNumber)
 
-    res.type('application/xml').send(xmlString).end()
-
     if (verification) {
-        await updateVerification(verification.id, callerNumber)
+        updateVerification(verification.id, callerNumber)
     }
 
     // delete call log for privacy reason
     deleteCallLog(callSid)
+
+    res.type('application/xml').send(xmlString).end()
 })
 
 // Start server
