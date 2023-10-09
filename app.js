@@ -115,6 +115,10 @@ const deleteExpiredNumbers = async() => {
 
 const importTwilioNumber = async(number) => {
 
+    await client.incomingPhoneNumbers(number.sid).update({
+        voiceUrl: appUrl + '/twilio'
+    })
+
     return await db.run(`insert into twilio_numbers (sid, phone_number, expired_at) values (?, ?, ?)`, 
         [
             number.sid,
