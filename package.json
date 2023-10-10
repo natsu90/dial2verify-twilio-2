@@ -20,6 +20,7 @@
     "express-session-sqlite": "^2.1.1",
     "express-useragent": "^1.0.15",
     "moment": "^2.29.4",
+    "nocache": "^4.0.0",
     "node-cron": "^3.0.2",
     "sqlite": "^5.0.1",
     "sqlite3": "^5.1.6",

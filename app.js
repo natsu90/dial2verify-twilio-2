@@ -14,6 +14,7 @@ import ejs from 'ejs';
 import cors from 'cors'
 import { URL } from 'url';
 import sqliteStoreFactory from 'express-session-sqlite'
+import nocache from 'nocache'
 
 dotenv.config({ path: '.env' });
 
@@ -29,9 +30,9 @@ const db = await open({
 })
 const SqliteStore = sqliteStoreFactory.default(sessions)
 
-// db.on('trace', (data) => {
-//     console.log(data)
-// })
+db.on('trace', (data) => {
+    console.log(data)
+})
 
 // create verifications table
 const createVerificationTable = async() => {
@@ -115,8 +116,6 @@ const deleteExpiredNumbers = async() => {
 
 const importTwilioNumber = async(number) => {
 
-    console.log('importing '+ number.phoneNumber)
-
     await client.incomingPhoneNumbers(number.sid).update({
         voiceUrl: appUrl + '/twilio'
     })
@@ -154,8 +153,6 @@ const getVerificationBySessionId = async(sessionId) => {
 }
 
 const requestNumber = async(sessionId) => {
-
-    console.log('requesting number')
 
     let phoneNumber;
     const validationTime = moment().add(verificationValidity, 'seconds').format('YYYY-MM-DD HH:mm:ss')
@@ -235,6 +232,8 @@ const port = 3003
 const oneDay = 1000 * 60 * 60 * 24;
 
 // express middlewares
+app.disable('view cache');
+app.use(nocache());
 app.enable('trust proxy');
 app.use(sessions({
     secret: process.env.SESSION_SECRET_KEY,
@@ -291,8 +290,6 @@ app.get('/ses/:sessionId', async(req, res) => {
 
     // get phoneNumber
     const phoneNumber = await requestNumber(sessionId)
-
-    console.log('getting phoneNumber', phoneNumber)
 
     if (phoneNumber) {
         res.redirect(301, 'tel:'+ phoneNumber)
