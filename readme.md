@@ -5,7 +5,7 @@ A big upgrade from [Dial2Verify-Twilio V1](https://github.com/natsu90/dial2verif
 
 ### Demo
 
-[https://dial2verify.ss.my](https://dial2verify.ss.my)
+[https://dial.ss.my](https://dial.ss.my)
 
 1. A session key is assigned when webpage is opened
 
